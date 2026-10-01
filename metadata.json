@@ -1,0 +1,6 @@
+{
+  "name": "DOCX Template Editor",
+  "description": "Professional Microsoft Word (.docx) template editor with intelligent placeholder detection, run-merging, formatting preservation, and real-time preview.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
