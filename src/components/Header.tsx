@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
                 100% Client-Side
               </span>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 hidden sm:block">
               Preserve formatting · Word OOXML Run-Merge Engine
             </p>
           </div>
