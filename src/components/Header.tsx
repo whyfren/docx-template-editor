@@ -5,13 +5,13 @@
 
 import React from 'react';
 import {
-  FileText,
   FileCheck2,
   RefreshCw,
   FolderOpen,
   Sparkles,
   ShieldCheck,
 } from 'lucide-react';
+import appIcon from '../img/google-docs.png';
 
 interface HeaderProps {
   fileName?: string;
@@ -35,8 +35,12 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand / Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-sky-500 text-white shadow-md shadow-indigo-100">
-            <FileText className="h-5 w-5" />
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-md ring-1 ring-slate-200">
+            <img
+              src={appIcon}
+              alt="DOCX Template Editor"
+              className="h-8 w-8 object-contain"
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">

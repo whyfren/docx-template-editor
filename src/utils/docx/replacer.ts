@@ -120,12 +120,19 @@ function replacePlaceholdersInParagraph(
       preparedImages?.get(cleanKey.replace(/-/g, '_'));
 
     // Get replacement value with resilient fallbacks
-    const rawVal =
-      values[cleanKey] ??
-      values[cleanKey.toLowerCase()] ??
-      values[cleanKey.replace(/-/g, '_')] ??
-      values[cleanKey.replace(/_/g, '-')];
-    const replacement = rawVal !== undefined ? String(rawVal) : '';
+    const candidateKeys = [
+      cleanKey,
+      cleanKey.toLowerCase(),
+      cleanKey.replace(/-/g, '_'),
+      cleanKey.replace(/_/g, '-'),
+    ];
+    const rawVal = candidateKeys
+      .map((k) => values[k])
+      .find((v) => v !== undefined && v !== null && String(v).trim() !== '');
+
+    // Unfilled variable: keep the original {{placeholder}} in the document
+    if (rawVal === undefined) continue;
+    const replacement = String(rawVal);
 
     // Find all runs that intersect with this match
     const affectedRuns = textRuns.filter(

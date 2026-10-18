@@ -50,6 +50,9 @@ Image variables are written as real DrawingML into the document: binary data goe
 **JSON integration**
 Export the detected variables as a JSON schema, paste or upload a JSON payload to bulk-fill, or export current values. Nested objects are flattened to dot notation, `{ data: ... }` and `{ variables: ... }` wrappers are unwrapped, and keys are matched case-insensitively with unmatched keys reported.
 
+**AI Prompt for LLMs**
+Generate a ready-to-paste prompt for ChatGPT/Claude/Gemini with all detected variables, rules (do not fill empty variables), and special formatting notes for `\n`/`\t` in narration/list fields.
+
 **Validation and metadata**
 Required-field checking, numeric and date format checks, and per-variable overrides for label, type, description, default value, and required status.
 
@@ -106,6 +109,7 @@ src/
       sampleGenerator.ts         builds the five sample .docx files
       sampleImage.ts             Canvas-generated sample photos and logos
     json/jsonManager.ts          JSON schema generation, import matching, export
+    ai/promptGenerator.ts        AI prompt generator for copy-paste to LLMs
     validation/index.ts          required-field and type validation
   components/
     Header.tsx                   app bar, template info, reset

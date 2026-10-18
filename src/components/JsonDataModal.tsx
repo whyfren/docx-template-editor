@@ -22,6 +22,7 @@ import {
   parseAndValidateJsonInput,
   downloadJsonFile,
 } from '../utils/json/jsonManager';
+import { generateAiFillPrompt } from '../utils/ai/promptGenerator';
 
 interface JsonDataModalProps {
   isOpen: boolean;
@@ -43,6 +44,8 @@ export const JsonDataModal: React.FC<JsonDataModalProps> = ({
   const [activeTab, setActiveTab] = useState<'import' | 'schema' | 'export'>('import');
   const [jsonInput, setJsonInput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [schemaCopied, setSchemaCopied] = useState(false);
+  const [aiPromptCopied, setAiPromptCopied] = useState(false);
   const [importResult, setImportResult] = useState<JsonImportResult | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -67,6 +70,23 @@ export const JsonDataModal: React.FC<JsonDataModalProps> = ({
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleCopySchema = () => {
+    navigator.clipboard.writeText(emptyTemplate);
+    setSchemaCopied(true);
+    setTimeout(() => setSchemaCopied(false), 2000);
+  };
+
+  const handleCopyAiPrompt = async () => {
+    const prompt = generateAiFillPrompt(variables, fileName);
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setAiPromptCopied(true);
+      setTimeout(() => setAiPromptCopied(false), 1500);
+    } catch (err) {
+      console.warn('Failed to copy AI prompt:', err);
+    }
   };
 
   const handleValidateInput = () => {
@@ -286,15 +306,15 @@ export const JsonDataModal: React.FC<JsonDataModalProps> = ({
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => handleCopy(emptyTemplate)}
+                    onClick={handleCopySchema}
                     className="inline-flex items-center gap-1 rounded border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
                   >
-                    {copied ? (
+                    {schemaCopied ? (
                       <Check className="h-3.5 w-3.5 text-emerald-600" />
                     ) : (
                       <Copy className="h-3.5 w-3.5 text-slate-500" />
                     )}
-                    <span>{copied ? 'Tersalin!' : 'Salin JSON'}</span>
+                    <span>{schemaCopied ? 'Tersalin!' : 'Salin JSON'}</span>
                   </button>
 
                   <button
@@ -369,6 +389,36 @@ export const JsonDataModal: React.FC<JsonDataModalProps> = ({
                     <Download className="h-3.5 w-3.5 text-slate-500" />
                     <span>Unduh File</span>
                   </button>
+                </div>
+              </div>
+
+              {/* AI Prompt Export */}
+              <div className="rounded-lg border border-indigo-200 bg-gradient-to-br from-indigo-50 to-sky-50 p-3 text-xs text-indigo-900">
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-indigo-600" />
+                    <span className="font-bold">Prompt untuk AI (Copy-Paste ke ChatGPT/Claude/Gemini)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyAiPrompt}
+                    className="inline-flex items-center gap-1 rounded border border-indigo-300 bg-white px-2.5 py-0.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-50"
+                  >
+                    {aiPromptCopied ? (
+                      <Check className="h-3.5 w-3.5 text-emerald-600" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5 text-indigo-600" />
+                    )}
+                    <span>{aiPromptCopied ? 'Tersalin!' : 'Salin Prompt AI'}</span>
+                  </button>
+                </div>
+                <p className="mb-2 text-[11px] text-indigo-700">
+                  Prompt ini menjelaskan semua variabel, cara penggunaan newline (<code className="font-mono">\n</code>) dan tab (<code className="font-mono">\t</code>) untuk narasi/list, aturan "jangan isi jika kosong", dan format data URL untuk foto.
+                </p>
+                <div className="relative">
+                  <pre className="max-h-48 overflow-auto whitespace-pre-wrap rounded-lg border border-indigo-200 bg-white/80 p-3 font-mono text-[10px] leading-relaxed text-slate-700">
+                    {generateAiFillPrompt(variables, fileName)}
+                  </pre>
                 </div>
               </div>
 
